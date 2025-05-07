@@ -1,5 +1,5 @@
 import streamlit as st
-from google_trans_new import google_translator
+from libretranslatepy import LibreTranslateAPI
 import joblib
 import re
 
@@ -7,19 +7,19 @@ import re
 model = joblib.load("sentiment_analysis_model.joblib")
 vectorizer = joblib.load("tfidf_vectorizer.pkl")
 
-# Initialize translator
-translator = google_translator()
+# Initialize LibreTranslate API
+translator = LibreTranslateAPI()
 
 # Text preprocessing (optional, adjust to your model’s needs)
 def preprocess(text):
     text = re.sub(r'[^\w\s]', '', text.lower())  # lowercase and remove punctuation
     return text
 
-# Translate to English (source language detection not supported directly)
+# Translate to English
 def translate_to_english(text):
     try:
-        translated_text = translator.translate(text, lang_tgt='en')
-        return translated_text, "unknown"  # google-trans-new does not return src
+        translated_text = translator.translate(text, source="auto", target="en")
+        return translated_text, "auto"
     except Exception as e:
         st.error("❌ Erreur lors de la traduction.")
         raise e
